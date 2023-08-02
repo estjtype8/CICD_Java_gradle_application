@@ -12,12 +12,12 @@ pipeline{
             }
             steps{
                 script{
-                    withSonarQubeEnv(credentialsId: 'sonar-token') {
+                    withSonarQubeEnv(credentialsId: 'sonartoken') {
                             sh 'chmod +x gradlew'
                             sh './gradlew sonarqube'
                     }
 
-                    timeout(time: 1, unit: 'HOURS') {
+                    timeout(5) {
                       def qg = waitForQualityGate()
                       if (qg.status != 'OK') {
                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
@@ -68,6 +68,7 @@ pipeline{
                 }
             }
         }
+
         stage('manual approval'){
             steps{
                 script{
@@ -78,6 +79,7 @@ pipeline{
                 }
             }
         }
+
         stage('Deploying application on k8s cluster') {
             steps {
                script{
@@ -89,6 +91,7 @@ pipeline{
                }
             }
         }
+
         stage('verifying app deployment'){
             steps{
                 script{
