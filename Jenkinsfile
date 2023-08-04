@@ -4,7 +4,7 @@ pipeline{
         VERSION = "${env.BUILD_ID}"
     }
     stages{
-        stage("sonar quality check"){
+        stage("sonar quality check"){ //gradlew yok hatası alırsa bu blogu komple silersin yazmislar
             agent {
                 docker {
                     image 'openjdk:11'
@@ -73,7 +73,7 @@ pipeline{
         stage('Deploying application on k8s cluster') {
             steps {
                script{
-                   withCredentials([kubeconfigFile(credentialsId: 'kubernetes-config', variable: 'KUBECONFIG')]) {
+                    configFileProvider([configFile(fileId: 'kube-dev-config', variable: 'KUBECONFIG')]) {
                         dir('kubernetes/') {
                           sh 'helm upgrade --install --set image.repository="192.168.8.29:8083/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ ' 
                         }
