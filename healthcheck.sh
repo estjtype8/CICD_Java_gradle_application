@@ -1,6 +1,6 @@
 echo "executing health check it might take a while"
 sleep 120
-kubectl run curl --image=curlimages/curl -i --rm --restart=Never -- curl myjavaapp-myapp:8080
+kubectl run curl --image=curlimages/curl -i --rm --restart=Never -- curl myjavaapp-myapp:8087
 
 if [ $? -eq 0 ]
 then
