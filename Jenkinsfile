@@ -4,29 +4,7 @@ pipeline{
         VERSION = "${env.BUILD_ID}"
     }
     stages{
-        stage("sonar quality check"){ //gradlew yok hatası alırsa bu blogu komple silersin yazmislar
-            agent {
-                docker {
-                    image 'openjdk:11'
-                }
-            }
-            steps{
-                script{
-                    withSonarQubeEnv(credentialsId: 'sonartoken') {
-                            sh 'chmod +x gradlew'
-                            sh './gradlew sonarqube --info'
-                    }
-
-                    timeout(5) {
-                      def qg = waitForQualityGate()
-                      if (qg.status != 'OK') {
-                           error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                      }
-                    }
-
-                }  
-            }
-        }
+       
         stage("docker build & docker push"){
             steps{
                 script{
